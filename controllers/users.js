@@ -33,3 +33,29 @@ module.exports.logout = (req, res, next) => {
     res.redirect("/listings");
   });
 };
+
+module.exports.addToWishlist = async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user.wishlist.includes(req.params.id)) {
+    user.wishlist.push(req.params.id);
+    await user.save();
+  }
+
+  req.flash("success", "Added to Wishlist ❤️");
+  res.redirect(`/listings/${req.params.id}`);
+};
+
+module.exports.removeFromWishlist = async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, {
+    $pull: { wishlist: req.params.id },
+  });
+
+  req.flash("success", "Removed from Wishlist");
+  res.redirect("back");
+};
+
+module.exports.showWishlist = async (req, res) => {
+  const user = await User.findById(req.user._id).populate("wishlist");
+  res.render("users/wishlist.ejs", { wishlist: user.wishlist });
+};
