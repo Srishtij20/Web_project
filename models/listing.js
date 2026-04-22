@@ -3,42 +3,29 @@ const Schema = mongoose.Schema;
 const Review = require("./review.js");
 
 const listingSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
+  title: { type: String, required: true },
   description: String,
-  image: {
-    url: String,
-    filename: String,
-  },
+  image: { url: String, filename: String },
   price: Number,
   location: String,
   country: String,
-  geometry: {
-    type: {
-      type: String,
-      enum: ["Point"],
-    },
-    coordinates: [Number], // [longitude, latitude]
+  category: {
+    type: String,
+    enum: ["trending","rooms","iconic cities","mountains","castles","amazing pools","camping","farms","arctic","domes","boats","beach"],
+    default: "trending",
   },
-  reviews: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Review",
-    },
-  ],
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  } 
-});
+  geometry: {
+    type: { type: String, enum: ["Point"] },
+    coordinates: [Number],
+  },
+  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+  owner: { type: Schema.Types.ObjectId, ref: "User" },
+}, { timestamps: true });
 
-listingSchema.post("findOneAndDelete", async (listing) =>{
-  if(listing) {
-    await Review.deleteMany({_id : {$in: listing.reviews}});
+listingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {
+    await Review.deleteMany({ _id: { $in: listing.reviews } });
   }
 });
 
-const Listing = mongoose.model("Listing", listingSchema);
-module.exports = Listing;
+module.exports = mongoose.model("Listing", listingSchema);

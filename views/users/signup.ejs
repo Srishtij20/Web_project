@@ -1,41 +1,76 @@
 <% layout("/layouts/boilerplate") %>
-
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">SignUp on Wanderlust</h1>
-    <div class="col-6 offset-3">
-        <form action="/signup" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input 
-                name="username"  
-                id="username"
-                type="text" 
-                class="form-control" 
-                required 
-                />
-                <div class="valid-feedback">Looks good!</div>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input 
-                name="email"  
-                id="email"
-                type="email" 
-                class="form-control" 
-                required 
-                />
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input 
-                name="password"  
-                id="password"
-                type="password" 
-                class="form-control" 
-                required 
-                />
-            </div>
-            <button class="btn btn-success">SignUp</button>
-        </form>
-    </div>
+<div class="auth-container row g-0 rounded-4 overflow-hidden border shadow-sm my-4">
+  <div class="col-md-5 d-none d-md-flex flex-column justify-content-end p-5 text-white"
+    style="background: linear-gradient(160deg, #1a1a2e, #16213e, #0f3460); min-height: 500px;">
+    <i class="fa-regular fa-compass fa-3x mb-3 opacity-75"></i>
+    <h2 class="fw-bold">Start your journey with WanderLust</h2>
+    <p class="opacity-75 mt-2">Discover unique stays. Host your own. Build memories.</p>
+  </div>
+  <div class="col-md-7 p-4 p-md-5 d-flex flex-column justify-content-center">
+    <h4 class="fw-bold mb-1">Create your account</h4>
+    <p class="text-muted small mb-4">Free forever. No credit card needed.</p>
+    <form action="/signup" method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Username</label>
+        <input name="username" type="text" class="form-control rounded-3" placeholder="traveller_123" required autofocus />
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Username is required</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Email</label>
+        <input name="email" type="email" class="form-control rounded-3" placeholder="you@email.com" required />
+        <div class="invalid-feedback">Enter a valid email</div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-semibold small">Password</label>
+        <div class="input-group">
+          <input name="password" id="password" type="password" class="form-control rounded-start-3" placeholder="Min. 6 characters" required minlength="6" />
+          <button class="btn btn-outline-secondary rounded-end-3" type="button" onclick="togglePwd('password', this)">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+        <div class="mt-2">
+          <div class="progress" style="height:4px;">
+            <div class="progress-bar" id="strengthBar" style="width:0%;"></div>
+          </div>
+          <small class="text-muted" id="strengthLabel"></small>
+        </div>
+      </div>
+      <button class="btn btn-dark rounded-pill w-100 py-2 fw-semibold">
+        <i class="fa-solid fa-user-plus me-2"></i>Create account
+      </button>
+    </form>
+    <p class="text-center text-muted small mt-4 mb-0">
+      Already have an account? <a href="/login" class="text-dark fw-semibold text-decoration-none">Log in</a>
+    </p>
+  </div>
 </div>
+<script>
+  function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    const icon = btn.querySelector("i");
+    inp.type = inp.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye"); icon.classList.toggle("fa-eye-slash");
+  }
+  document.getElementById("password").addEventListener("input", function () {
+    const val = this.value;
+    let strength = 0;
+    if (val.length >= 6) strength++;
+    if (val.length >= 10) strength++;
+    if (/[A-Z]/.test(val)) strength++;
+    if (/[0-9]/.test(val)) strength++;
+    if (/[^A-Za-z0-9]/.test(val)) strength++;
+    const levels = [
+      { pct:"20%", cls:"bg-danger",  txt:"Very weak" },
+      { pct:"40%", cls:"bg-warning", txt:"Weak" },
+      { pct:"60%", cls:"bg-info",    txt:"Fair" },
+      { pct:"80%", cls:"bg-primary", txt:"Strong" },
+      { pct:"100%",cls:"bg-success", txt:"Very strong" },
+    ];
+    const l = levels[Math.max(0, strength - 1)];
+    const bar = document.getElementById("strengthBar");
+    bar.style.width = l.pct;
+    bar.className = "progress-bar " + l.cls;
+    document.getElementById("strengthLabel").textContent = val.length ? l.txt : "";
+  });
+</script>

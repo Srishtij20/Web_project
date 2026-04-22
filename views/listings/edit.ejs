@@ -1,89 +1,70 @@
 <% layout("/layouts/boilerplate") %>
-<div class="row mt-3">
-  <div class="col-8 offset-2">
-    <h3>Edit your Listing</h3>
-    <form 
-      method="POST" 
-      action="/listings/<%= listing._id %>?_method=PUT"
-      novalidate
-      class="needs-validation"
-      enctype="multipart/form-data"
-    >
-      <div class="mb-3">
-        <label for="title" class="form-label">title</label>
-        <input name="listing[title]" 
-        value="<%= listing.title %>" 
-        type="text"  
-        class="form-control"
-        required
-        />
-        <div class="valid-feedback">Title looks good!</div>
-      </div>
-
-      <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea 
-        name="listing[description]" 
-        class="form-control"
-        required
-        >
-        <%= listing.description %>
-      </textarea>
-      <div class="invalid-feedback">PLease enter a short description</div>
-      </div>
-
-      <div class="mb-3">
-        Original Listing Image </br>
-        <img src="<%= originalImageUrl %>" />
-      </div>
-
-      <div class="mb-3">
-        <label for="image" class="form-label">Upload New Image</label>
-        <input 
-        name="listing[image][url]" 
-        type="file" 
-        class="form-control"
-        />
-      </div>
-
-      <div class="row">
-      <div class="mb-3 col-md-4">
-        <label for="price" class="form-label">Price</label>
-        <input 
-        name="listing[price]" 
-        value="<%= listing.price %>" 
-        type="number" 
-        class="form-control"
-        required
-        />
-        <div class="invalid-feedback">Price should be valid</div>
-      </div>
-
-      <div class="mb-3 col-md-8">
-        <label for="country" class="form-label">Country</label>
-        <input 
-        name="listing[country]" 
-        value="<%= listing.country %>" 
-        type="text" 
-        class="form-control"
-        required
-        />
-        <div class="invalid-feedback">Country should be valid</div>
-      </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input 
-        name="listing[location]" 
-        value="<%= listing.location %>" 
-        type="text" 
-        class="form-control"/>
-        <div class="invalid-feedback">Location should be valid</div>
-      </div>
-
-      <button class="btn edit-btn mt-3">Edit</button>
-    </form>
+<div class="row justify-content-center mt-4 mb-5">
+  <div class="col-lg-7 col-md-9">
+    <div class="p-4 p-md-5 border rounded-4 shadow-sm">
+      <h3 class="fw-bold mb-1">Edit your listing</h3>
+      <p class="text-muted mb-4 small">Update your listing details</p>
+      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+          <input name="listing[title]" type="text" class="form-control rounded-3" value="<%= listing.title %>" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+          <textarea name="listing[description]" class="form-control rounded-3" rows="4" required><%= listing.description %></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Current image</label><br />
+          <img src="<%= originalImageUrl %>" alt="current" class="rounded-3 mb-2" style="max-height:160px; object-fit:cover;" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Upload new image <span class="text-muted small">(optional)</span></label>
+          <input name="listing[image]" type="file" class="form-control rounded-3" accept="image/*" id="imageInput" onchange="previewImage(event)" />
+          <div id="imagePreviewWrap" class="mt-2" style="display:none;">
+            <img id="imagePreview" src="" alt="preview" class="rounded-3" style="max-height:160px; object-fit:cover; width:100%;" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Category</label>
+          <select name="listing[category]" class="form-select rounded-3">
+            <% const cats = ["trending","rooms","iconic cities","mountains","castles","amazing pools","camping","farms","arctic","domes","boats","beach"]; %>
+            <% for (let c of cats) { %>
+              <option value="<%= c %>" <%= listing.category === c ? 'selected' : '' %>><%= c.charAt(0).toUpperCase() + c.slice(1) %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Price / night (₹)</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input name="listing[price]" type="number" class="form-control" value="<%= listing.price %>" min="0" required />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label fw-semibold">Country</label>
+            <input name="listing[country]" type="text" class="form-control rounded-3" value="<%= listing.country %>" required />
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Location</label>
+          <input name="listing[location]" type="text" class="form-control rounded-3" value="<%= listing.location %>" required />
+        </div>
+        <div class="d-flex gap-3">
+          <button class="btn btn-dark rounded-pill px-5 py-2 fw-semibold flex-grow-1">
+            <i class="fa-solid fa-floppy-disk me-2"></i>Save changes
+          </button>
+          <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
-<script src="/js/script.js"></script>
+<script>
+  function previewImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    document.getElementById("imagePreview").src = URL.createObjectURL(file);
+    document.getElementById("imagePreviewWrap").style.display = "block";
+  }
+</script>

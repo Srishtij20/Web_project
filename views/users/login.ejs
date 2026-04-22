@@ -1,31 +1,43 @@
 <% layout("/layouts/boilerplate") %>
-
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">Login</h1>
-    <div class="col-6 offset-3">
-        <form action="/login" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input 
-                name="username"  
-                id="username"
-                type="text" 
-                class="form-control" 
-                required 
-                />
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input 
-                name="password"  
-                id="password"
-                type="password" 
-                class="form-control" 
-                required 
-                />
-            </div>
-            <button class="btn btn-success">Login</button>
-        </form>
-    </div>
+<div class="auth-container row g-0 rounded-4 overflow-hidden border shadow-sm my-4">
+  <div class="col-md-5 d-none d-md-flex flex-column justify-content-end p-5 text-white"
+    style="background: linear-gradient(160deg, #ff416c, #ff4b2b); min-height: 500px;">
+    <i class="fa-regular fa-compass fa-3x mb-3 opacity-75"></i>
+    <h2 class="fw-bold">Welcome back to WanderLust</h2>
+    <p class="opacity-75 mt-2">Your next adventure is just a login away.</p>
+  </div>
+  <div class="col-md-7 p-4 p-md-5 d-flex flex-column justify-content-center">
+    <h4 class="fw-bold mb-1">Log in</h4>
+    <p class="text-muted small mb-4">Enter your credentials to continue</p>
+    <form action="/login" method="POST" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Username</label>
+        <input name="username" type="text" class="form-control rounded-3" placeholder="your_username" required autofocus />
+        <div class="invalid-feedback">Username is required</div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-semibold small">Password</label>
+        <div class="input-group">
+          <input name="password" id="password" type="password" class="form-control rounded-start-3" placeholder="••••••••" required />
+          <button class="btn btn-outline-secondary rounded-end-3" type="button" onclick="togglePwd('password', this)">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      <button class="btn btn-dark rounded-pill w-100 py-2 fw-semibold">
+        <i class="fa-solid fa-right-to-bracket me-2"></i>Log in
+      </button>
+    </form>
+    <p class="text-center text-muted small mt-4 mb-0">
+      Don't have an account? <a href="/signup" class="text-dark fw-semibold text-decoration-none">Sign up</a>
+    </p>
+  </div>
 </div>
+<script>
+  function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    const icon = btn.querySelector("i");
+    inp.type = inp.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye"); icon.classList.toggle("fa-eye-slash");
+  }
+</script>

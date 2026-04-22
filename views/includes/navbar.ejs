@@ -1,86 +1,58 @@
-<style>
-  .search-btn {
-    background-color: #fe424d;
-    color: #fff;
-    border-radius: 25px;
-    padding: 0 1rem;
-  }
-
-  .search-btn:hover {
-    background-color: #fe424d;
-    color: #fff;
-  }
-
-  .search-btn i {
-    margin-right: 0.5rem;
-  }
-
-  .search-inp {
-    border-radius: 25px;
-    padding: 0.5rem 3rem;
-    font-size: 1rem;
-  }
-</style>
-
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-
-    <!-- Logo -->
-    <a class="navbar-brand" href="/listings">
-      <i class="fa-regular fa-compass"></i>
+<nav class="navbar navbar-expand-md bg-white border-bottom sticky-top shadow-sm">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/listings">
+      <i class="fa-solid fa-sun text-warning fs-4"></i>
+      <span style="font-size:1.15rem; letter-spacing:-0.3px;">Solara</span>
     </a>
-
-    <!-- Toggle button -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-    >
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- Navbar content -->
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-      <!-- Left links -->
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">Explore</a>
-      </div>
-
-      <!-- Search -->
-      <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search" action="/listings" method="GET">
+    <div class="collapse navbar-collapse" id="mainNav">
+      <form class="d-flex mx-auto my-2 my-md-0 search-form" role="search" action="/listings" method="GET">
+        <div class="input-group search-group">
           <input
-            class="form-control me-2 search-inp"
+            class="form-control search-inp border-end-0"
             type="search"
-            name="q"
-            placeholder="Search destinations"
-            aria-label="Search"
+            name="search"
+            value="<%= typeof search !== 'undefined' ? search : '' %>"
+            placeholder="Search destinations..."
           />
           <button class="btn search-btn" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>Search
+            <i class="fa-solid fa-magnifying-glass"></i>
           </button>
-        </form>
-      </div>
-
-      <!-- Auth links -->
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
-
-        <% if (!currUser) { %>
-          <a class="nav-link" href="/signup"><b>Sign up</b></a>
-          <a class="nav-link" href="/login"><b>Log in</b></a>
-        <% } else { %>
-          <!-- Wishlist Button -->
-          <a class="nav-link" href="/listings/wishlist">
-            ❤️ Wishlist
+        </div>
+      </form>
+      <ul class="navbar-nav ms-auto align-items-center gap-1 mt-2 mt-md-0">
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-pill host-btn" href="/listings/new">
+            <i class="fa-solid fa-plus me-1"></i>List your property
           </a>
-          
-          <a class="nav-link" href="/logout"><b>Log out</b></a>
+        </li>
+        <% if (!currUser) { %>
+          <li class="nav-item"><a class="nav-link" href="/signup"><b>Sign up</b></a></li>
+          <li class="nav-item"><a class="btn btn-dark rounded-pill px-3" href="/login">Log in</a></li>
+        <% } else { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 border rounded-pill px-3 py-2"
+               href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-bars"></i>
+              <div class="user-avatar"><%= currUser.username.charAt(0).toUpperCase() %></div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+              <li>
+                <span class="dropdown-item-text text-muted small px-3">
+                  Signed in as <b><%= currUser.username %></b>
+                </span>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li><a class="dropdown-item" href="/listings/wishlist"><i class="fa-regular fa-heart me-2 text-danger"></i>Wishlist</a></li>
+              <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-plus me-2"></i>Add listing</a></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li><a class="dropdown-item text-danger" href="/logout"><i class="fa-solid fa-right-from-bracket me-2"></i>Log out</a></li>
+            </ul>
+          </li>
         <% } %>
-      </div>
-
+      </ul>
     </div>
   </div>
 </nav>
